@@ -5,6 +5,7 @@
 
 ```js
 $(function(){
+    //監視のスタート。事前にこれを呼んでおく必要があります。
     $('.contents').observeScrollEvents({
         stopObserveInterval: 100,  //ストップイベント監視用タイマーのインターバル（ms）
         warpAllowance: 10,         //縦方向のスタートイベントの遊び
