@@ -13,7 +13,7 @@
         observeScrollEvents: function(options){
             //オプションデフォルト値
             options = $.extend({
-                stopObserveInterval: 100,  //ストップイベント監視用タイマーのインターバル（ms）
+                stopObserveInterval: 60,   //ストップイベント監視用タイマーのインターバル（ms）
                 warpAllowance: 10,         //縦方向のスタートイベントの遊び
                 weftAllowance: 10          //横方向のスタートイベントの遊び
             }, options);
