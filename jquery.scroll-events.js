@@ -19,50 +19,55 @@
             }, options);
 
             //監視用変数初期化
-            this.each(function(){
-                $(this).data('scrollEvents', {});
-            });
-
-            this.scroll(function(e){
+            return this.each(function(){
                 var elem = $(this);
-                var data = elem.data('scrollEvents');
-                clearTimeout(data.timer);
+                var timer, topPos, leftPos, warpStarted, weftStarted;
+                elem.scroll(function(e){
+                    var elem = $(this);
+                    clearTimeout(timer);
 
-                var currentTop = elem.scrollTop();
-                var currentLeft = elem.scrollLeft();
+                    var currentTop = elem.scrollTop();
+                    var currentLeft = elem.scrollLeft();
 
-                //縦方向のスタート位置を記憶
-                if(data.topPos === undefined){
-                    data.topPos = currentTop;
-                }
-
-                //横方向のスタート位置を記憶
-                if(data.leftPos === undefined){
-                    data.leftPos = currentLeft;
-                }
-
-                //縦方向のスタートイベント発火
-                if(Math.abs(data.topPos - currentTop) > options.warpAllowance && !data.warpStarted){
-                    data.warpStarted = true;
-                    elem.trigger('warp-scroll-start', {top: currentTop, left: currentLeft});
-                }
-
-                //横方向のスタートイベント発火
-                if(Math.abs(data.leftPos - currentLeft) > options.weftAllowance && !data.weftStarted){
-                    data.weftStarted = true;
-                    elem.trigger('weft-scroll-start', {top: currentTop, left: currentLeft});
-                }
-
-                //ストップイベント監視タイマー
-                data.timer = setTimeout(function() {
-                    if(data.warpStarted || data.weftStarted){
-                        elem.trigger('scroll-stop', {top: currentTop, left: currentLeft});
+                    //縦方向のスタート位置を記憶
+                    if(topPos === undefined){
+                        topPos = currentTop;
                     }
 
-                    //監視用変数クリア
-                    elem.data('scrollEvents', {});
-                }, options.stopObserveInterval)
+                    //横方向のスタート位置を記憶
+                    if(leftPos === undefined){
+                        leftPos = currentLeft;
+                    }
+
+                    //縦方向のスタートイベント発火
+                    if(Math.abs(topPos - currentTop) > options.warpAllowance && !warpStarted){
+                        warpStarted = true;
+                        elem.trigger('warp-scroll-start', {top: currentTop, left: currentLeft});
+                    }
+
+                    //横方向のスタートイベント発火
+                    if(Math.abs(leftPos - currentLeft) > options.weftAllowance && !weftStarted){
+                        weftStarted = true;
+                        elem.trigger('weft-scroll-start', {top: currentTop, left: currentLeft});
+                    }
+
+                    //ストップイベント監視タイマー
+                    timer = setTimeout(function() {
+                        if(warpStarted || weftStarted){
+                            elem.trigger('scroll-stop', {top: currentTop, left: currentLeft});
+                        }
+
+                        //監視用変数クリア
+                        timer = undefined;
+                        topPos = undefined;
+                        leftPos = undefined;
+                        warpStarted = undefined;
+                        weftStarted = undefined;
+                    }, options.stopObserveInterval)
+                });
             });
+
+
         }
     });
 })(jQuery);
