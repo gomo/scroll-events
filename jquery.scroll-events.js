@@ -1,14 +1,14 @@
 /**
  * jQuery scroll-events
  * https://github.com/gomo/scroll-events
- * 
+ *
  * Copyright (c) 2015 Masamoto Miyata
  * Licensed under the MIT.
  */
 
 ;(function($){
     "use strict";
-    
+
     $.fn.extend({
         observeScrollEvents: function(options){
             //オプションデフォルト値
@@ -28,32 +28,35 @@
                 var data = elem.data('scrollEvents');
                 clearTimeout(data.timer);
 
+                var currentTop = elem.scrollTop();
+                var currentLeft = elem.scrollLeft();
+
                 //縦方向のスタート位置を記憶
                 if(data.topPos === undefined){
-                    data.topPos = elem.scrollTop();
+                    data.topPos = currentTop;
                 }
 
                 //横方向のスタート位置を記憶
                 if(data.leftPos === undefined){
-                    data.leftPos = elem.scrollLeft();
+                    data.leftPos = currentLeft;
                 }
 
                 //縦方向のスタートイベント発火
-                if(Math.abs(data.topPos - elem.scrollTop()) > options.warpAllowance && !data.warpStarted){
+                if(Math.abs(data.topPos - currentTop) > options.warpAllowance && !data.warpStarted){
                     data.warpStarted = true;
-                    elem.trigger('warp-scroll-start', {top: elem.scrollTop(), left: elem.scrollLeft()});
+                    elem.trigger('warp-scroll-start', {top: currentTop, left: currentLeft});
                 }
 
                 //横方向のスタートイベント発火
-                if(Math.abs(data.leftPos - elem.scrollLeft()) > options.weftAllowance && !data.weftStarted){
+                if(Math.abs(data.leftPos - currentLeft) > options.weftAllowance && !data.weftStarted){
                     data.weftStarted = true;
-                    elem.trigger('weft-scroll-start', {top: elem.scrollTop(), left: elem.scrollLeft()});
+                    elem.trigger('weft-scroll-start', {top: currentTop, left: currentLeft});
                 }
 
                 //ストップイベント監視タイマー
                 data.timer = setTimeout(function() {
                     if(data.warpStarted || data.weftStarted){
-                        elem.trigger('scroll-stop', {top: elem.scrollTop(), left: elem.scrollLeft()});
+                        elem.trigger('scroll-stop', {top: currentTop, left: currentLeft});
                     }
 
                     //監視用変数クリア
