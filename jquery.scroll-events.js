@@ -20,9 +20,8 @@
 
             //監視用変数初期化
             return this.each(function(){
-                var elem = $(this);
                 var timer, topPos, leftPos, warpStarted, weftStarted;
-                elem.scroll(function(e){
+                $(this).on('scroll', function(e){
                     var elem = $(this);
                     clearTimeout(timer);
 
